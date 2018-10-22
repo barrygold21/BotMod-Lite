@@ -1,41 +1,36 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BotMod {
-
-    public class GlobalVars {
-        public static string robotsName = "Fred";
-        public static int passengers = 0;
-        public static int maxPassengers = 1;
-        public static int traction = 0;
+namespace BotMod_Lite {
+   
+    class Variables {
+        public string robotsName = "Fred";
+        public int passengers = 0;
+        public int maxPassengers = 1;
+        public int traction = 0;
         public const int landscapeSize = 10;
-        public static int[,] terrain = new int[landscapeSize, landscapeSize];
-        public static int[,] landscape = new int[landscapeSize, landscapeSize];
-        public static int powerRemaining;
-        public static int pplSaved = 0;
-        public static readonly int[,] powerLoss = new int[3, 3] {
+        public int[,] terrain = new int[landscapeSize, landscapeSize];
+        public int[,] landscape = new int[landscapeSize, landscapeSize];
+        public int powerRemaining;
+        public int pplSaved = 0;
+        public readonly int[,] powerLoss = new int[3, 3] {
                 {1, 2, 3},
                 {2, 1, 2},
                 {3, 3, 1},
         };
-        public static int x; // robots x pos
-        public static int y; // robots y pos
+        public int x; // robots x pos
+        public int y; // robots y pos
     }
 
-    class Program {
+    class Program : Variables {
 
         static void Main() {
+            Program p = new Program();
             bool inputValid = false;
             int mCho = 0;
             do {
                 Console.Clear();
-                Console.WriteLine(" 1. Play Game    ");
-                Console.WriteLine(" 2. Modify Robot ");
-                Console.WriteLine(" 3. Quit         ");
+                Console.WriteLine(" 1. Play Game \n 2. Modify Robot \n 3. Quit");
                 Console.WriteLine("Please enter your choice (1 - 4). . .");
                 Console.WriteLine();
                 string userChoice = Console.ReadLine();
@@ -44,68 +39,63 @@ namespace BotMod {
                     inputValid = true;
                     switch (mCho) {
                         case 1:
-                            PlayGame();
+                            p.PlayGame();
                             break;
                         case 2:
                             inputValid = false;
-                            ModifyRobot();
+                            p.ModifyRobot();
                             break;
                         case 3:
                             Environment.Exit(0);
                             break;
                         default:
-                            inputValid = Error(2);
+                            inputValid = p.Error(2);
                             break;
                     }
                 }
-                else {
-                    Error(1);
-                }
+                else { p.Error(1); }
             } while (!inputValid);
         }
-
-        static bool Error(int errorCode) {
+        
+         bool Error(int code) {
             Console.Clear();
-            switch (errorCode) {
+            switch (code) {
                 case 1:
-                    Console.WriteLine("Please enter a number!");
+                    Console.WriteLine("Please enter a number! \n");
                     break;
                 case 2:
-                    Console.WriteLine("Valid choice not entered. Please enter an integer between 1 and 4.");
+                    Console.WriteLine("Valid choice not entered. Please enter an integer between 1 and 4. \n");
                     break;
                 case 3:
                     Console.WriteLine("Valid choice not entered.");
                     break;
                 case 4:
-                    Console.WriteLine("Move invalid! You have attempted to move out of the grid. Please try again.");
+                    Console.WriteLine("Move invalid! You have attempted to move out of the grid. Please try again. \n");
                     System.Threading.Thread.Sleep(800);
                     Console.Clear();
                     DrawLandscape();
                     break;
                 case 5:
-                    Console.WriteLine("Valid choice not entered. Please enter an integer between 1 and 3.");
+                    Console.WriteLine("Valid choice not entered. Please enter an integer between 1 and 3. \n");
                     break;
                 case 6:
-                    Console.WriteLine("Please enter a valid robot name.");
+                    Console.WriteLine("Please enter a valid robot name. \n");
                     break;
                 default:
-                    Console.WriteLine("Unknown error code.");
+                    Console.WriteLine("Unknown error code. \n");
                     break;
             }
             System.Threading.Thread.Sleep(800);
             return false;
-        }
+         }
 
-        static void ModifyRobot() {
+        void ModifyRobot() {
             bool goBackToMainMenu = false;
             int mCho = 0;
             do {
                 Console.Clear();
                 Console.WriteLine("Modify Robot");
-                Console.WriteLine(" 1. Name Robot ({0})", GlobalVars.robotsName);
-                Console.WriteLine(" 2. Change Traction");
-                Console.WriteLine(" 3. Change Passenger Bay Size");
-                Console.WriteLine(" 4. Go To Main Menu");
+                Console.WriteLine(" 1. Name Robot ({0}) \n 2. Change Traction \n 3. Change Passenger Bay Size \n 4. Go To Main Menu", robotsName);
                 Console.WriteLine("Please enter your choice (1 - 4). . .");
                 Console.WriteLine();
                 string userChoice = Console.ReadLine();
@@ -129,82 +119,71 @@ namespace BotMod {
                             break;
                     }
                 }
-                else {
-                    Error(1);
-                }
+                else { Error(1); }
             } while (!goBackToMainMenu);
         }
 
-        static void NameRobot() {
+        void NameRobot() {
             bool nameValid = false;
             do {
                 Console.Clear();
-                Console.WriteLine("Current Robot Name: {0}", GlobalVars.robotsName);
+                Console.WriteLine("Current Robot Name: {0}", robotsName);
                 string userInput = Console.ReadLine();
                 string rbFChr = userInput.Substring(0, 1);
                 string rbFChrUpper = rbFChr.ToUpper();
                 if (userInput.Length > 3 && rbFChr == rbFChrUpper) {
-                    GlobalVars.robotsName = userInput;
-                    Console.WriteLine("Name set to {0}", GlobalVars.robotsName);
+                    robotsName = userInput;
+                    Console.WriteLine("Name set to {0}", robotsName);
                     System.Threading.Thread.Sleep(800);
                     nameValid = true;
                 }
-                else {
-                    nameValid = Error(6);
-                }
+                else { nameValid = Error(6); }
             } while (nameValid == false);
         }
 
-        static void SelectTractionType() {
+        void SelectTractionType() {
             bool inputValid = false;
             do {
                 Console.Clear();
-                Console.WriteLine("Traction Types:");
-                Console.WriteLine("wheels");
-                Console.WriteLine("tracks");
-                Console.WriteLine("skis");
+                Console.WriteLine("Traction Types: \n wheels \n tracks \n skis");
                 Console.WriteLine("Please enter which traction type you wish to use:");
                 string userInput = Console.ReadLine();
                 inputValid = true;
                 switch (userInput) {
                     case "wheels":
-                        GlobalVars.traction = 0;
+                        traction = 0;
                         break;
                     case "tracks":
-                        GlobalVars.traction = 1;
+                        traction = 1;
                         break;
                     case "skis":
-                        GlobalVars.traction = 2;
+                        traction = 2;
                         break;
                     default:
                         inputValid = Error(3);
                         break;
-
                 }
             } while (!inputValid);
         }
 
-        static void ChangeBaySize() {
+        void ChangeBaySize() {
             bool inputValid = false;
             do {
                 Console.Clear();
-                Console.WriteLine("Your passenger bay can be the following sizes:");
-                Console.WriteLine("small");
-                Console.WriteLine("med");
-                Console.WriteLine("large");
+                Console.WriteLine("Your passenger bay can be the following sizes: \n small \n med \n large");
                 Console.WriteLine("Please enter which bay size you wish to use:");
                 Console.WriteLine();
                 string userInput = Console.ReadLine();
                 inputValid = true;
                 switch (userInput) {
                     case "small":
-                        GlobalVars.maxPassengers = 1;
+                        maxPassengers = 1;
                         break;
                     case "med":
-                        GlobalVars.maxPassengers = 2;
+                        maxPassengers = 2;
                         break;
                     case "large":
-                        GlobalVars.maxPassengers = 3;
+                        maxPassengers = 3;
                         break;
                     default:
                         inputValid = Error(3);
@@ -213,111 +192,86 @@ namespace BotMod {
             } while (!inputValid);
         }
 
-        static void PlayGame() {
+         void PlayGame() {
             Console.Clear();
             Init();
             bool gameOver = false;
-            bool gameWon = false;
             do {
                 DrawLandscape();
                 string move = EnterMove(); // take in move
                 Console.WriteLine();
                 System.Threading.Thread.Sleep(100);
-                GlobalVars.powerRemaining -= GlobalVars.maxPassengers - 1;
-                GlobalVars.powerRemaining -= GlobalVars.powerLoss[GlobalVars.traction, GlobalVars.terrain[GlobalVars.x, GlobalVars.y]];
-                if (GlobalVars.landscape[GlobalVars.x, GlobalVars.y] == 1) {
-                    if (GlobalVars.passengers < GlobalVars.maxPassengers) {
-                        GlobalVars.passengers++;
-                        GlobalVars.landscape[GlobalVars.x, GlobalVars.y] = 0;
+                powerRemaining -= maxPassengers - 1;
+                powerRemaining -= powerLoss[traction, terrain[x, y]];
+                if (landscape[x, y] == 1) {
+                    if (passengers < maxPassengers) {
+                        passengers++;
+                        landscape[x, y] = 0;
                     }
                 }
-                if (GlobalVars.landscape[GlobalVars.x, GlobalVars.y] == 2) {
-                    GlobalVars.pplSaved += GlobalVars.passengers;
-                    GlobalVars.passengers = 0;
+                if (landscape[x, y] == 2) {
+                    pplSaved += passengers;
+                    passengers = 0;
                 }
                 Console.Clear();
-                if (GlobalVars.powerRemaining == 0 && GlobalVars.pplSaved == 4) {
-                    gameWon = true;
+                if (powerRemaining == 0 || pplSaved == 4) {
+                    if (pplSaved == 4) {
+                        Console.WriteLine("You win!");
+                    }
+                    else if (powerRemaining == 0) {
+                        Console.WriteLine("You lose. :(");
+                    }
                     gameOver = true;
-                    break;
                 }
-                else if (GlobalVars.powerRemaining == 0) {
-                    gameOver = true;
-                    break;
-                }
-                else if (GlobalVars.pplSaved == 4) {
-                    gameWon = true;
-                    break;
-                }
-                else {
-                    gameOver = false;
-                    gameWon = false;
-                }
-            } while (!gameOver || !gameWon);
-            if (gameWon) {
-                Console.WriteLine("You win!");
-            }
-            else if (gameOver) {
-                Console.WriteLine("You lost.");
-            }
-            else if (gameWon && gameOver) {
-                Console.WriteLine("You win!");
-            }
+            } while (!gameOver);
             System.Threading.Thread.Sleep(1500);
-        }
+         }
 
-        static void Init() {
-            int k = GlobalVars.landscapeSize - 1;
-            string filePath = System.IO.Path.GetFullPath("terraindata.txt");
-            using (StreamReader fileReader = new StreamReader(filePath)) {
-                string line;
+        void Init() {
+            int k = landscapeSize;
+            using (var reader = new StringReader(Data.Terrain)) {
+                int lineContent;
                 int i = 0;
                 int j = 0;
                 do {
-                    if (i == k + 1) {
-                        break;
-                    }
-                    line = fileReader.ReadLine();
-                    int numeric = Convert.ToInt32(line);
-                    GlobalVars.terrain[i, j] = numeric;
-                    if (j == k) {
+                    lineContent = Convert.ToInt32(reader.ReadLine());
+                    terrain[i, j] = lineContent;
+                    if (j == k - 1) {
                         j = 0;
                         i++;
                     }
-                    else {
-                        j++;
-                    }
-                } while (!fileReader.EndOfStream);
+                    else { j++; }
+                    if (i == k) { break; }
+                } while (true);
             }
-            k++;
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < k; j++) {
-                    GlobalVars.landscape[i, j] = 0;
+                    landscape[i, j] = 0;
                 }
             }
-            GlobalVars.x = 0;
-            GlobalVars.y = 0;
-            GlobalVars.pplSaved = 0;
-            GlobalVars.powerRemaining = 150;
-            GlobalVars.landscape[0, 2] = 1;
-            GlobalVars.landscape[2, 7] = 1;
-            GlobalVars.landscape[6, 4] = 1;
-            GlobalVars.landscape[6, 9] = 1;
-            GlobalVars.landscape[3, 6] = 2;
+            x = 0;
+            y = 0;
+            pplSaved = 0;
+            powerRemaining = 150;
+            landscape[0, 2] = 1;
+            landscape[2, 7] = 1;
+            landscape[6, 4] = 1;
+            landscape[6, 9] = 1;
+            landscape[3, 6] = 2;
         }
 
-        static void DrawLandscape() {
+        void DrawLandscape() {
             Console.WriteLine();
-            int k = GlobalVars.landscapeSize;
+            int k = landscapeSize;
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < k; j++) {
-                    if (i == GlobalVars.x && j == GlobalVars.y) {
+                    if (i == x && j == y) {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("R");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     else {
-                        switch (GlobalVars.terrain[i, j]) {
+                        switch (terrain[i, j]) {
                             case 0:
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 break;
@@ -328,7 +282,7 @@ namespace BotMod {
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 break;
                         }
-                        switch (GlobalVars.landscape[i, j]) {
+                        switch (landscape[i, j]) {
                             case 0:
                                 Console.Write(".");
                                 break;
@@ -345,40 +299,38 @@ namespace BotMod {
                 Console.WriteLine();
             }
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Power Remaining: {0}", GlobalVars.powerRemaining);
-            Console.WriteLine("Passengers: {0}", GlobalVars.passengers);
+            Console.WriteLine("\nPower Remaining: {0}\tPassengers: {1}", powerRemaining, passengers);
         }
 
-        static string EnterMove() {
+        string EnterMove() {
             string move;
             bool moveIsValid = false;
-            string inputMove;
             do {
                 Console.WriteLine();
-                Console.WriteLine("Please enter a move for {0} to take:", GlobalVars.robotsName);
-                inputMove = Console.ReadLine();
-                inputMove = inputMove.ToUpper();
-                if (inputMove == "N" || inputMove == "E" || inputMove == "S" || inputMove == "W") {
+                Console.WriteLine("Please enter a move for {0} to take:", robotsName);
+                move = Console.ReadLine();
+                move = move.ToUpper();
+                if (move == "N" || move == "E" || move == "S" || move == "W") {
                     moveIsValid = true;
-                    switch (inputMove) {
+                    switch (move) {
                         case "N":
-                            if (GlobalVars.x != 0) {
-                                GlobalVars.x--;
+                            if (x != 0) {
+                                x--;
                             }
                             break;
                         case "E":
-                            if (GlobalVars.y != 9) {
-                                GlobalVars.y++;
+                            if (y != 9) {
+                                y++;
                             }
                             break;
                         case "S":
-                            if (GlobalVars.x != 9) {
-                                GlobalVars.x++;
+                            if (x != 9) {
+                                x++;
                             }
                             break;
                         case "W":
-                            if (GlobalVars.y != 0) {
-                                GlobalVars.y--;
+                            if (y != 0) {
+                                y--;
                             }
                             break;
                         default:
@@ -386,11 +338,8 @@ namespace BotMod {
                             break;
                     }
                 }
-                else {
-                    moveIsValid = Error(4);
-                }
+                else { moveIsValid = Error(4); }
             } while (!moveIsValid);
-            move = inputMove;
             Console.WriteLine("Move Valid.");
             System.Threading.Thread.Sleep(200);
             return move;
